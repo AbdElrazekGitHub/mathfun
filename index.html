@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MathFun | تعلم الرياضيات باللعب</title>
+
+  <!-- SEO -->
+  <meta name="description" content="MathFun منصة مجانية لتعلم الرياضيات من خلال فيديوهات تعليمية وألعاب تفاعلية." />
+  <meta name="keywords" content="رياضيات, ألعاب تعليمية, MathFun, تعلم الرياضيات" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Cairo',sans-serif;
+      background:#f5f7fb;
+      color:#333;
+      line-height:1.8;
+    }
+    header{
+      background:linear-gradient(135deg,#2563eb,#1e40af);
+      color:#fff;
+      padding:40px 20px;
+      text-align:center;
+    }
+    header h1{font-size:2.5rem}
+    header p{opacity:.9;margin-top:10px}
+
+    nav{
+      background:#fff;
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      padding:15px;
+      box-shadow:0 2px 6px rgba(0,0,0,.05)
+    }
+    nav a{
+      text-decoration:none;
+      color:#1e40af;
+      font-weight:600;
+    }
+
+    .container{max-width:1100px;margin:40px auto;padding:0 15px}
+
+    .grades{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:20px;
+    }
+    .card{
+      background:#fff;
+      border-radius:16px;
+      padding:25px;
+      text-align:center;
+      box-shadow:0 10px 25px rgba(0,0,0,.08);
+      transition:.3s;
+    }
+    .card:hover{transform:translateY(-5px)}
+    .card h3{margin-bottom:10px;color:#1e40af}
+
+    .btn{
+      display:inline-block;
+      margin-top:15px;
+      padding:10px 20px;
+      background:#2563eb;
+      color:#fff;
+      border-radius:30px;
+      text-decoration:none;
+      font-size:14px;
+    }
+
+    footer{
+      background:#1e293b;
+      color:#fff;
+      text-align:center;
+      padding:25px;
+      margin-top:60px;
+    }
+    footer span{color:#60a5fa}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>MathFun 🎯</h1>
+  <p>تعلم الرياضيات بالفهم واللعب</p>
+</header>
+
+<nav>
+  <a href="#grades">الصفوف</a>
+  <a href="#about">عن MathFun</a>
+  <a href="https://www.youtube.com" target="_blank">قناة اليوتيوب</a>
+</nav>
+
+<div class="container" id="grades">
+  <h2 style="margin-bottom:25px">اختر الصف الدراسي</h2>
+  <div class="grades">
+    <div class="card">
+      <h3>الصف الأول الابتدائي</h3>
+      <p>أساسيات الحساب والعد</p>
+      <a class="btn" href="grade1.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الثاني الابتدائي</h3>
+      <p>الجمع والطرح بالصور</p>
+      <a class="btn" href="grade2.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الثالث الابتدائي</h3>
+      <p>الضرب والتقسيم المبسط</p>
+      <a class="btn" href="grade3.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الرابع الابتدائي</h3>
+      <p>شرح مبسط + ألعاب تفاعلية</p>
+      <a class="btn" href="grade4.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الخامس الابتدائي</h3>
+      <p>تعلم باللعب والتجربة</p>
+      <a class="btn" href="grade5.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف السادس الابتدائي</h3>
+      <p>رياضيات ممتعة خطوة بخطوة</p>
+      <a class="btn" href="grade6.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الأول الإعدادي</h3>
+      <p>تأسيس الجبر والهندسة</p>
+      <a class="btn" href="prep1.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الثاني الإعدادي</h3>
+      <p>تطبيقات ومسائل حياتية</p>
+      <a class="btn" href="prep2.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الثالث الإعدادي</h3>
+      <p>مراجعة واستعداد للثانوي</p>
+      <a class="btn" href="prep3.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الأول الثانوي</h3>
+      <p>جبر – مثلثات – إحصاء</p>
+      <a class="btn" href="sec1.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الثاني الثانوي</h3>
+      <p>تفاضل – تكامل – جبر</p>
+      <a class="btn" href="sec2.html">الدخول</a>
+    </div>
+    <div class="card">
+      <h3>الصف الثالث الثانوي</h3>
+      <p>مراجعات نهائية + تدريب</p>
+      <a class="btn" href="sec3.html">الدخول</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="container" id="about">
+  <h2>عن MathFun</h2>
+  <p>
+    MathFun منصة تعليمية مجانية تهدف إلى تبسيط مادة الرياضيات للطلاب من خلال
+    فيديوهات تعليمية وألعاب تفاعلية تساعد على الفهم والتطبيق.
+  </p>
+</div>
+
+<footer>
+  <p>© 2026 <span>MathFun</span> — تعلم، العب، افهم</p>
+</footer>
+
+</body>
+</html>
