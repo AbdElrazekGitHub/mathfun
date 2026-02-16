@@ -14,18 +14,21 @@
 
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
+
     body{
       font-family:'Cairo',sans-serif;
       background:#f5f7fb;
       color:#333;
       line-height:1.8;
     }
+
     header{
       background:linear-gradient(135deg,#2563eb,#1e40af);
       color:#fff;
       padding:40px 20px;
       text-align:center;
     }
+
     header h1{font-size:2.5rem}
     header p{opacity:.9;margin-top:10px}
 
@@ -37,39 +40,65 @@
       padding:15px;
       box-shadow:0 2px 6px rgba(0,0,0,.05)
     }
+
     nav a{
       text-decoration:none;
       color:#1e40af;
       font-weight:600;
     }
 
-    .container{max-width:1100px;margin:40px auto;padding:0 15px}
-
-    .grades{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:20px;
+    .container{
+      max-width:900px;
+      margin:40px auto;
+      padding:0 15px
     }
-    .card{
+
+    /* Accordion */
+    .accordion-item{
       background:#fff;
-      border-radius:16px;
-      padding:25px;
-      text-align:center;
-      box-shadow:0 10px 25px rgba(0,0,0,.08);
-      transition:.3s;
+      margin-bottom:15px;
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 8px 20px rgba(0,0,0,.07);
     }
-    .card:hover{transform:translateY(-5px)}
-    .card h3{margin-bottom:10px;color:#1e40af}
 
-    .btn{
-      display:inline-block;
-      margin-top:15px;
-      padding:10px 20px;
+    .accordion-header{
+      width:100%;
+      padding:18px;
       background:#2563eb;
       color:#fff;
-      border-radius:30px;
+      border:none;
+      text-align:right;
+      font-size:18px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .accordion-header:hover{
+      background:#1e40af;
+    }
+
+    .accordion-content{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .4s ease;
+      background:#f8fafc;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .accordion-content a{
+      padding:15px 20px;
       text-decoration:none;
-      font-size:14px;
+      color:#1e293b;
+      border-bottom:1px solid #e2e8f0;
+      transition:.2s;
+    }
+
+    .accordion-content a:hover{
+      background:#e0e7ff;
+      padding-right:30px;
     }
 
     footer{
@@ -79,9 +108,11 @@
       padding:25px;
       margin-top:60px;
     }
+
     footer span{color:#60a5fa}
   </style>
 </head>
+
 <body>
 
 <header>
@@ -96,70 +127,44 @@
 </nav>
 
 <div class="container" id="grades">
-  <h2 style="margin-bottom:25px">اختر الصف الدراسي</h2>
-  <div class="grades">
-    <div class="card">
-      <h3>الصف الأول الابتدائي</h3>
-      <p>أساسيات الحساب والعد</p>
-      <a class="btn" href="grade1.html">الدخول</a>
+  <h2 style="margin-bottom:25px">اختر المرحلة الدراسية</h2>
+
+  <div class="accordion">
+
+    <!-- ابتدائي -->
+    <div class="accordion-item">
+      <button class="accordion-header">📘 المرحلة الابتدائية</button>
+      <div class="accordion-content">
+        <a href="grade1.html">الصف الأول الابتدائي</a>
+        <a href="grade2.html">الصف الثاني الابتدائي</a>
+        <a href="grade3.html">الصف الثالث الابتدائي</a>
+        <a href="grade4.html">الصف الرابع الابتدائي</a>
+        <a href="grade5.html">الصف الخامس الابتدائي</a>
+        <a href="grade6.html">الصف السادس الابتدائي</a>
+      </div>
     </div>
-    <div class="card">
-      <h3>الصف الثاني الابتدائي</h3>
-      <p>الجمع والطرح بالصور</p>
-      <a class="btn" href="grade2.html">الدخول</a>
+
+    <!-- إعدادي -->
+    <div class="accordion-item">
+      <button class="accordion-header">📗 المرحلة الإعدادية</button>
+      <div class="accordion-content">
+        <a href="prep1.html">الصف الأول الإعدادي</a>
+        <a href="grade2prep/index.html">الصف الثاني الإعدادي</a>
+        <a href="prep3.html">الصف الثالث الإعدادي</a>
+      </div>
     </div>
-    <div class="card">
-      <h3>الصف الثالث الابتدائي</h3>
-      <p>الضرب والتقسيم المبسط</p>
-      <a class="btn" href="grade3.html">الدخول</a>
+
+    <!-- ثانوي -->
+    <div class="accordion-item">
+      <button class="accordion-header">📙 المرحلة الثانوية</button>
+      <div class="accordion-content">
+        <a href="sec1.html">الصف الأول الثانوي</a>
+        <a href="sec2.html">الصف الثاني الثانوي</a>
+        <a href="sec3.html">الصف الثالث الثانوي</a>
+      </div>
     </div>
-    <div class="card">
-      <h3>الصف الرابع الابتدائي</h3>
-      <p>شرح مبسط + ألعاب تفاعلية</p>
-      <a class="btn" href="grade4.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الخامس الابتدائي</h3>
-      <p>تعلم باللعب والتجربة</p>
-      <a class="btn" href="grade5.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف السادس الابتدائي</h3>
-      <p>رياضيات ممتعة خطوة بخطوة</p>
-      <a class="btn" href="grade6.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الأول الإعدادي</h3>
-      <p>تأسيس الجبر والهندسة</p>
-      <a class="btn" href="prep1.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الثاني الإعدادي</h3>
-      <p>تطبيقات ومسائل حياتية</p>
-      <a class="btn" href="grade2prep/index.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الثالث الإعدادي</h3>
-      <p>مراجعة واستعداد للثانوي</p>
-      <a class="btn" href="prep3.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الأول الثانوي</h3>
-      <p>جبر – مثلثات – إحصاء</p>
-      <a class="btn" href="sec1.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الثاني الثانوي</h3>
-      <p>تفاضل – تكامل – جبر</p>
-      <a class="btn" href="sec2.html">الدخول</a>
-    </div>
-    <div class="card">
-      <h3>الصف الثالث الثانوي</h3>
-      <p>مراجعات نهائية + تدريب</p>
-      <a class="btn" href="sec3.html">الدخول</a>
-    </div>
+
   </div>
-</div>
 </div>
 
 <div class="container" id="about">
@@ -173,6 +178,26 @@
 <footer>
   <p>© 2026 <span>MathFun</span> — تعلم، العب، افهم</p>
 </footer>
+
+<script>
+document.querySelectorAll(".accordion-header").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const content = btn.nextElementSibling;
+
+    document.querySelectorAll(".accordion-content").forEach(item=>{
+      if(item !== content){
+        item.style.maxHeight = null;
+      }
+    });
+
+    if(content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+});
+</script>
 
 </body>
 </html>
