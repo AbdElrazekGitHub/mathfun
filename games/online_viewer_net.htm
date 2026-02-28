@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي عباقرة التناسب - MathFun</title>
+    
+    <!-- الخطوط والمكتبات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@500;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root { --primary: #2c3e50; --accent: #e74c3c; --success: #27ae60; --bg: #f8f9fa; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #quiz-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 650px; width: 95%; text-align: center; border-top: 10px solid var(--primary); }
+        .hidden { display: none !important; }
+        .option-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #eee; background: #fff; border-radius: 12px; cursor: pointer; font-size: 1.2em; font-family: 'Tajawal', sans-serif; transition: 0.3s; }
+        .option-btn:hover { border-color: var(--accent); background: #fffafa; transform: scale(1.02); }
+        input[type="text"] { padding: 12px; width: 85%; margin-bottom: 20px; border-radius: 8px; border: 2px solid #ddd; text-align: center; font-size: 1.1em; font-family: 'Cairo'; }
+        #start-btn { padding: 12px 50px; background: var(--success); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.2em; }
+        #certificate { border: 12px double #d4af37; padding: 40px; background: #fff; position: relative; }
+        .cert-title { font-family: 'Cairo'; color: #d4af37; font-size: 2.5em; font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <!-- شاشة البداية -->
+    <div id="start-screen">
+        <h1 style="color:var(--primary)">🚀 تحدي التناسب المتجدد</h1>
+        <p>مقدم من قناة <strong style="color:var(--accent)">MathFun</strong></p>
+        <input type="text" id="player-name" placeholder="أدخل اسمك يا بطل...">
+        <br>
+        <button id="start-btn" onclick="startQuiz()">ابدأ المسابقة 🔥</button>
+    </div>
+
+    <!-- شاشة الأسئلة -->
+    <div id="question-screen" class="hidden">
+        <h3 id="q-text" style="color: var(--primary); min-height: 60px;"></h3>
+        <div id="options-container"></div>
+        <div style="margin-top: 20px; color: #888; font-weight: bold;">السؤال <span id="q-num">1</span> من 10</div>
+    </div>
+
+    <!-- شاشة الشهادة -->
+    <div id="result-screen" class="hidden">
+        <div id="certificate">
+            <div class="cert-title">شهادة تقدير</div>
+            <p style="font-size: 1.2em;">تفتخر قناة <strong>MathFun</strong> بتكريم:</p>
+            <h1 id="cert-name" style="color: var(--accent); margin: 15px 0;"></h1>
+            <p>لاجتيازه اختبار "خواص التناسب - الجزء الثاني" بنجاح</p>
+            <p style="font-size: 1.3em;">الدرجة النهائية: <strong id="final-score"></strong> / 10</p>
+        </div>
+        <button onclick="location.reload()" style="margin-top:20px; padding:10px 30px; border-radius:10px; cursor:pointer;">إعادة التحدي 🔄</button>
+    </div>
+</div>
+
+<!-- موسيقى حماسية -->
+<audio id="bg-music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    let score = 0, currentIdx = 0, playerName = "", shuffledQuestions = [];
+
+    // الأسئلة المستقاة من المصادر
+    const masterQuestions = [
+        { q: "إذا كان \\(\\frac{a}{b} = \\frac{c}{d} = k\\)، فإن \\(a = \\dots\\)؟", ans: "bk", opts: ["bk", "dk", "k", "b+k"] },
+        { q: "إذا كان \\(\\frac{a}{b} = \\frac{4}{3}\\)، فإن قيمة \\(\\frac{3a-2b}{3a+2b}\\) هي:", ans: "\\frac{1}{3}", opts: ["\\frac{1}{3}", "1", "\\frac{2}{3}", "\\frac{1}{2}"] },
+        { q: "تسمى الخاصية التي تنص على أن \\(\\frac{b}{a} = \\frac{d}{c}\\) بـ:", ans: "تساوي المعكوس", opts: ["تساوي المعكوس", "تبديل الوسطين", "ثابت التناسب", "حاصل الضرب"] },
+        { q: "إذا كان \\(\\frac{a}{b} = \\frac{c}{d}\\)، فإن \\(\\frac{a}{c} = \\frac{b}{d}\\) تسمى خاصية:", ans: "تبديل الوسطين", opts: ["تبديل الوسطين", "تساوي المعكوس", "ثابت التناسب", "جمع المقدمات"] },
+        { q: "إذا كان \\(\\frac{a}{b} = \\frac{2}{7}\\)، فإن قيمة \\(\\frac{2b}{7a}\\) تساوي:", ans: "1", opts: ["1", "\\frac{4}{49}", "\\frac{49}{4}", "0"] },
+        { q: "إذا كانت الكميات \\(a, b, c, d\\) متناسبة، فإن:", ans: "ad = bc", opts: ["ad = bc", "ac = bd", "ab = cd", "a+d = b+c"] },
+        { q: "إذا كان \\(\\frac{a}{3} = \\frac{b}{4}\\)، فإن قيمة \\(4a - 3b + 7\\) تساوي:", ans: "7", opts: ["7", "0", "1", "12"] },
+        { q: "إذا كان \\(\\frac{a}{b} = \\frac{c}{d} = k\\)، فإن \\(c = \\dots\\)؟", ans: "dk", opts: ["dk", "bk", "k", "d/k"] },
+        { q: "إذا كان \\(\\frac{a}{b} = \\frac{3}{5}\\)، فإن قيمة \\(\\frac{a+b}{b}\\) هي:", ans: "\\frac{8}{5}", opts: ["\\frac{8}{5}", "\\frac{5}{3}", "\\frac{3}{5}", "1"] },
+        { q: "إذا كان \\(\\frac{4}{a} = \\frac{3}{b}\\)، فإن النسبة \\(a:b\\) تساوي:", ans: "4:3", opts: ["4:3", "3:4", "12:1", "1:1"] }
+    ];
+
+    // دالة الخلط (Shuffle)
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startQuiz() {
+        playerName = document.getElementById('player-name').value;
+        if(!playerName) { 
+            Swal.fire({ icon: 'warning', title: 'عذراً', text: 'يرجى إدخال اسمك أولاً!' });
+            return; 
+        }
+        
+        // خلط الأسئلة عند كل بداية جديدة
+        shuffledQuestions = shuffle([...masterQuestions]);
+        currentIdx = 0;
+        score = 0;
+
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('question-screen').classList.remove('hidden');
+        
+        // تشغيل الموسيقى
+        document.getElementById('bg-music').play().catch(() => console.log("Music interaction required"));
+        
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const data = shuffledQuestions[currentIdx];
+        document.getElementById('q-text').innerHTML = data.q;
+        document.getElementById('q-num').innerText = currentIdx + 1;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+        
+        // خلط الاختيارات لهذا السؤال تحديداً
+        const shuffledOpts = shuffle([...data.opts]);
+        
+        shuffledOpts.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            
+            // تحسين العرض: النصوص العربية تظهر كنص، والرموز تظهر كرياضيات
+            if (opt.match(/[أ-ي]/)) {
+                btn.innerText = opt;
+            } else {
+                btn.innerHTML = `\\( ${opt} \\)`;
+            }
+            
+            btn.onclick = () => checkAnswer(opt, data.ans);
+            container.appendChild(btn);
+        });
+
+        if (window.MathJax) MathJax.typeset();
+    }
+
+    function checkAnswer(selected, correct) {
+        const isCorrect = (selected === correct);
+        if (isCorrect) score++;
+
+        Swal.fire({
+            icon: isCorrect ? 'success' : 'error',
+            title: isCorrect ? 'أحسنت يا بطل!' : 'ركز في المرة القادمة',
+            html: isCorrect ? 'إجابة صحيحة مذهلة!' : `الإجابة الصحيحة هي: \\( ${correct} \\)`,
+            timer: 1800,
+            showConfirmButton: false,
+            didOpen: () => { if(window.MathJax) MathJax.typeset(); }
+        }).then(() => {
+            currentIdx++;
+            if (currentIdx < 10) loadQuestion();
+            else showResult();
+        });
+    }
+
+    function showResult() {
+        document.getElementById('question-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('cert-name').innerText = playerName;
+        document.getElementById('final-score').innerText = score;
+        
+        Swal.fire({
+            title: 'تم بحمد الله!',
+            text: `لقد أنهيت التحدي يا ${playerName}`,
+            icon: 'info',
+            confirmButtonText: 'رؤية الشهادة'
+        });
+    }
+</script>
+
+</body>
+</html>
