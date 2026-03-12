@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي التناسب المتسلسل - MathFun</title>
+    
+    <!-- المكتبات المطلوبة -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #d4af37; }
+        body { font-family: 'Cairo', sans-serif; background: #eef2f3; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #game-box { background: white; width: 95%; max-width: 800px; padding: 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; }
+        .hidden { display: none !important; }
+        .question-text { font-size: 1.6rem; margin: 20px 0; color: var(--primary); min-height: 80px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .option-btn { padding: 20px; font-size: 1.2rem; border: 2px solid #ddd; border-radius: 12px; background: #fff; cursor: pointer; transition: 0.3s; }
+        .option-btn:hover { border-color: var(--secondary); background: #f9fffb; transform: translateY(-3px); }
+        
+        /* تصميم الشهادة */
+        #certificate { background: #fffcf0; border: 15px double var(--accent); padding: 40px; position: relative; }
+        .cert-title { font-size: 3rem; color: var(--accent); margin-bottom: 10px; }
+        .cert-name { font-size: 2.5rem; color: var(--primary); border-bottom: 2px solid #333; display: inline-block; padding: 0 20px; }
+        .mathfun-logo { color: #e74c3c; font-weight: bold; font-size: 1.5rem; margin-top: 20px; }
+        
+        .btn-main { padding: 15px 40px; font-size: 1.2rem; background: var(--secondary); color: white; border: none; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="game-box">
+        <!-- شاشة البداية -->
+        <div id="start-screen">
+            <h1 style="color: var(--primary);">🎓 مسابقة التناسب المتسلسل 🎓</h1>
+            <p>قناة <span class="mathfun-logo">MathFun</span> ترحب بك في رحلة الإبداع</p>
+            <input type="text" id="playerName" placeholder="أدخل اسمك بطل الرياضيات" style="padding:12px; width:70%; margin:20px 0; font-size:1.1rem; border-radius:8px; border:1px solid #ccc;">
+            <br>
+            <button class="btn-main" onclick="initGame()">ابدأ التحدي الآن</button>
+        </div>
+
+        <!-- شاشة الأسئلة -->
+        <div id="quiz-screen" class="hidden">
+            <div id="progress" style="font-weight: bold; color: var(--secondary);">سؤال 1 من 10</div>
+            <div class="question-text" id="qContainer"></div>
+            <div class="options-grid" id="optionsContainer"></div>
+        </div>
+
+        <!-- شاشة الشهادة -->
+        <div id="certificate" class="hidden">
+            <div class="cert-title">شهادة تفوق</div>
+            <p>تشهد قناة <strong>MathFun</strong> بأن المبدع/ة:</p>
+            <div class="cert-name" id="userNameCert"></div>
+            <p style="font-size: 1.3rem;">قد اجتاز بنجاح "تحدي التناسب المتسلسل" بنسبة نجاح متميزة.</p>
+            <div style="margin-top: 30px;">
+                <span>التاريخ: <span id="certDate"></span></span>
+                <br><br>
+                <button class="btn-main" onclick="location.reload()">تحدي جديد 🔄</button>
+            </div>
+            <div class="mathfun-logo">MathFun - نمنحك متعة التعلم</div>
+        </div>
+    </div>
+
+<script>
+    // بنك الأسئلة المستخرج بدقة من المصادر [2، 3، 4، 5، 6]
+    const fullBank = [
+        { q: "الأعداد $3, 9, 27$ تكون في تناسب ...", options: ["متسلسل", "عادي", "غير متناسب", "متساوي"], correct: "متسلسل" },
+        { q: "الوسط المتناسب الموجب بين العددين $8, 2$ هو:", options: ["$4$", "$-4$", "$\\pm 4$", "$16$"], correct: "$4$" },
+        { q: "الثالث المتناسب للعددين $9, 12$ هو:", options: ["$16$", "$18$", "$15$", "$24$"], correct: "$16$" },
+        { q: "إذا كان $b$ وسطاً متناسباً بين $a, c$ فإن:", options: ["$b^2 = ac$", "$\\frac{a}{b} = \\frac{c}{b}$", "$b = ac$", "$a^2 = bc$"], correct: "$b^2 = ac$" },
+        { q: "ما الثالث المتناسب للكميات $2x, x^2$؟", options: ["$\\frac{1}{2}x^3$", "$2x^3$", "$x^2$", "$4x$"], correct: "$\\frac{1}{2}x^3$" },
+        { q: "إذا كانت $a, 4, 16$ في تناسب متسلسل فإن $a = $ ...", options: ["$1$", "$2$", "$4$", "$8$"], correct: "$1$" },
+        { q: "إذا كان $\\frac{a}{b} = \\frac{b}{c} = 3$ فإن $\\frac{a}{c} = $ ...", options: ["$9$", "$3$", "$6$", "$\\frac{1}{3}$"], correct: "$9$" },
+        { q: "الوسط المتناسب للكميات $2x^2$ و $8x^4$ هو:", options: ["$\\pm 4x^3$", "$4x^3$", "$16x^6$", "$\\pm 4x^2$"], correct: "$\\pm 4x^3$" },
+        { q: "إذا كانت $a, b, c, d$ في تناسب متسلسل فإن $b = $ ...", options: ["$dk^2$", "$dk$", "$dk^3$", "$k^2$"], correct: "$dk^2$" },
+        { q: "إذا كان $x, y, 18$ في تناسب متسلسل و $x+y=20$ فإن $x$ يمكن أن تساوي:", options: ["$8$", "$5$", "$12$", "$50$"], correct: "$8$" },
+        { q: "قيمة $k$ في التناسب $3, a, b, 24$ هي:", options: ["$\\frac{1}{2}$", "$2$", "$3$", "$\\frac{1}{3}$"], correct: "$\\frac{1}{2}$" },
+        { q: "إذا كانت أطوال أضلاع مثلث $9, x, y$ في تناسب متسلسل، وكان المحيط $22$ سم، فإن $x+y=$", options: ["$13$", "$9$", "$11$", "$15$"], correct: "$13$" }
+    ];
+
+    let currentQuestions = [];
+    let qIndex = 0;
+    let score = 0;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initGame() {
+        const name = document.getElementById('playerName').value;
+        if(!name) { Swal.fire('من فضلك أدخل اسمك'); return; }
+        
+        // تجهيز 10 أسئلة عشوائية من البنك
+        currentQuestions = shuffle([...fullBank]).slice(0, 10);
+        
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        document.getElementById('bgMusic').play();
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = currentQuestions[qIndex];
+        document.getElementById('progress').innerText = `السؤال ${qIndex + 1} من 10`;
+        document.getElementById('qContainer').innerHTML = q.q;
+        
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+        
+        // خلط الاختيارات أيضاً
+        const shuffledOptions = shuffle([...q.options]);
+        
+        shuffledOptions.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = opt;
+            btn.onclick = () => checkAnswer(opt, q.correct);
+            container.appendChild(btn);
+        });
+        
+        // إعادة معالجة المعادلات الرياضية لتظهر بسط ومقام
+        MathJax.typesetPromise();
+    }
+
+    function checkAnswer(selected, correct) {
+        if(selected === correct) {
+            score++;
+            Swal.fire({ icon: 'success', title: 'ممتاز!', text: 'إجابة رياضية دقيقة', timer: 1200, showConfirmButton: false });
+        } else {
+            Swal.fire({ icon: 'error', title: 'خطأ بسيط', text: `الإجابة الصحيحة هي: ${correct}`, timer: 1800, showConfirmButton: false });
+        }
+        
+        qIndex++;
+        if(qIndex < 10) {
+            showQuestion();
+        } else {
+            showFinal();
+        }
+    }
+
+    function showFinal() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('certificate').classList.remove('hidden');
+        document.getElementById('userNameCert').innerText = document.getElementById('playerName').value;
+        document.getElementById('certDate').innerText = new Date().toLocaleDateString('ar-EG');
+        
+        if(score < 7) {
+            Swal.fire('أحسنت محاولة جيدة', `درجتك هي ${score} من 10. يمكنك المحاولة مرة أخرى لتصبح ملك التناسب!`, 'info');
+        } else {
+            Swal.fire('بطل التناسب!', `أنت مذهل، درجتك ${score} من 10`, 'success');
+        }
+    }
+</script>
+</body>
+</html>
